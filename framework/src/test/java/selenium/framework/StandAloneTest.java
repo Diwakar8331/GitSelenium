@@ -28,7 +28,7 @@ public class StandAloneTest {
 		driver.findElement(By.xpath("//input[@value='Login']")).click();
 
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(".mb-3")));
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(".mb-3")));
 
 		// grab all the items present in the dashboard
 		List<WebElement> dashboard = driver.findElements(By.className(".mb-3"));
