@@ -7,8 +7,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 public class StandAloneTest {
 
@@ -28,10 +30,10 @@ public class StandAloneTest {
 		driver.findElement(By.xpath("//input[@value='Login']")).click();
 
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(".mb-3")));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".mb-3")));
 
 		// grab all the items present in the dashboard
-		List<WebElement> dashboard = driver.findElements(By.className(".mb-3"));
+		List<WebElement> dashboard = driver.findElements(By.cssSelector(".mb-3"));
 		if (dashboard.isEmpty()) {
 			System.out.println("No elements found with class 'mb-3'.");
 		}
@@ -39,9 +41,8 @@ public class StandAloneTest {
 		// using java streams to iterate every items
 		Thread.sleep(2000);
 		WebElement prod = null;
-		String product="ADIDAS ORIGINAL";
+		String product="ZARA COAT 3";
 		for (WebElement dashboards : dashboard) {
-			System.out.println("check");
 			// System.out.println("Checking: " + dashboards.getText());
 			if (dashboards.findElement(By.cssSelector("b")).getText().trim().equalsIgnoreCase(product)) {
 				prod = dashboards;
@@ -54,7 +55,7 @@ public class StandAloneTest {
 		if (prod != null) {
 			prod.findElement(By.cssSelector(".card-body button:last-of-type")).click();
 		} else {
-			System.out.println("No product found with text 'qwerty'.");
+			System.out.println("No product found with text: "+product);
 		}
 
 		// confirmation popup after click on cart
@@ -62,18 +63,26 @@ public class StandAloneTest {
 		// cutom time so that driver will wait for 5 sec beacuse it failed the steps
 		// we have to wait untile the animating icon disaaper beacuse after disappering
 		// then only the add to cart popup is appearing
-		System.out.println("thread1");
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".ng-animating")));
 		
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[contains(@class, 'toast')]")));
-System.out.println(driver.getPageSource());
 
 		Thread.sleep(2000);
 		// click on the cart button
 		driver.findElement(By.xpath("//button[@class='btn btn-custom']//i[@class='fa fa-shopping-cart']")).click();
 
 
-		List<WebElement> cart=driver.findElements(By.xpath("//div[@class='cart']//ul//li"));
+		List<WebElement> cartProducts=driver.findElements(By.cssSelector(".cartSection h3"));
+		Boolean match=cartProducts.stream().anyMatch(cartProduct->cartProduct.getText().equalsIgnoreCase(product));
+		Assert.assertTrue(match);
+		driver.findElement(By.xpath("//button[contains(text(),'Checkout')] ")).click();
+		
+		//placeorder
+		Actions a =new Actions(driver);
+		a.sendKeys(driver.findElement(By.xpath("//input[@placeholder='Select Country']")), "india").build().perform();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".ta-results")));
+		driver.findElement(By.xpath("(//button[contains(@class,'ta-item')])[2]")).click();
+		driver.findElement(By.cssSelector(".action__submit")).click();
 		
 		
 	}
