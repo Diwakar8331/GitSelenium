@@ -24,7 +24,7 @@ public class LandingPage extends AbstractComponents{
 	//PageFactory
 	
 	//driver.findElement(By.xpath("//input[@id='userEmail']")).sendKeys("dkoctober31@gmail.com");
-	@FindBy(xpath="userEmail")
+	@FindBy(id="userEmail")
 	WebElement userEmail;
 	
 	//driver.findElement(By.id("userPassword")).sendKeys("Diwakar@123");
@@ -32,7 +32,7 @@ public class LandingPage extends AbstractComponents{
 	WebElement passwordEle;
 	
 	//driver.findElement(By.xpath("//input[@value='Login']")).click();
-	@FindBy(xpath="login")
+	@FindBy(id="login")
 	WebElement login;
 	
 	public void loginApp(String email,String passwword)
