@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import selenium.pageobjects.LandingPage;
+
 public class StandAloneTest {
 
 	public static void main(String[] args) throws InterruptedException {
@@ -20,6 +22,7 @@ public class StandAloneTest {
 		// WebDriverManager.chromedriver().setup();
 		WebDriver driver = new ChromeDriver();
 		driver.get("https://rahulshettyacademy.com/client");
+		LandingPage landingPage=new LandingPage(driver);
 		driver.manage().window().maximize();
 		// implicitlyWait
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -84,6 +87,10 @@ public class StandAloneTest {
 		driver.findElement(By.xpath("(//button[contains(@class,'ta-item')])[2]")).click();
 		driver.findElement(By.cssSelector(".action__submit")).click();
 		
+		String confirMessage=driver.findElement(By.cssSelector(".hero-primary")).getText();
+		Thread.sleep(1000);
+		Assert.assertTrue(confirMessage.equalsIgnoreCase("Thankyou for the order."));
+		System.out.println("Passed");
 		
 	}
 
