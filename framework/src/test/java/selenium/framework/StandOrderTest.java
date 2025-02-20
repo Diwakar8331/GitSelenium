@@ -32,6 +32,7 @@ public class StandOrderTest {
 		landingPage.loginApp("dkoctober31@gmail.com", "Diwakar@123");
 		
 	
+		
 		ProductCatalogue productCatalogue=new ProductCatalogue(driver);
 		
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
