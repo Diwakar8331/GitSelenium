@@ -1,0 +1,38 @@
+package selenium.pageobjects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class LandingPage {
+
+	WebDriver driver;
+	public LandingPage(WebDriver driver)
+	{
+		//initialize at the beggning
+		this.driver=driver;
+		PageFactory.initElements(driver, this);  //by using method initElements it will intialize the driver by PageFactory
+		
+	}
+	
+	//WebElement email=driver.findElement(By.xpath("//input[@id='userEmail']"));
+	//PageFactory
+	@FindBy(xpath="userEmail")
+	WebElement userEmail;
+	
+	@FindBy(id="userPassword")
+	WebElement passwordEle;
+	
+	@FindBy(xpath="login")
+	WebElement login;
+	
+	public void loginApp(String email,String passwword)
+	{
+		userEmail.sendKeys(email);
+		passwordEle.sendKeys(passwword);
+		login.click();
+	}
+}
+
