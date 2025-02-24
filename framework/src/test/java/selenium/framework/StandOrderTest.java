@@ -3,10 +3,12 @@ package selenium.framework;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -58,7 +60,7 @@ public class StandOrderTest {
 		Assert.assertTrue(match);
 		ChecckOut cheeckout = cartPage.checkOut();
 
-		// placeorder
+		// Placeorder
 		cheeckout.selectCountry(countryName);
 		ConfirmationPage confirmPage = cheeckout.submitClick();
 
@@ -66,33 +68,47 @@ public class StandOrderTest {
 		Thread.sleep(1000);
 		Assert.assertTrue(confirMessage.equalsIgnoreCase("Thankyou for the order."));
 		System.out.println("Passed");
-		
-		//WebElement Capture
-		WebElement element=driver.findElement(By.cssSelector(".title:first-child"));
-		File srcFile=element.getScreenshotAs(OutputType.FILE);
-		FileUtils.copyFile(srcFile,new File("C:\\Users\\Diwakar.Kumar\\Downloads\\screen1.png"));
+
+		// Getting the order id
+		WebElement order = driver.findElement(By.cssSelector("label[class*='ng-star-inserted']"));
+		String orderid = order.getText().trim();
+		String orderidd = orderid.replaceAll("[|]", "").trim();
+		System.out.println(orderidd);
+
+		// WebElement Capture
+		WebElement element = driver.findElement(By.cssSelector(".title:first-child"));
+		File srcFile = element.getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(srcFile, new File("C:\\Users\\Diwakar.Kumar\\Downloads\\screen1.png"));
 		System.out.println("WebElement capture");
-		
-		//WebPage Capture
-		File srcFiile=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+
+		// WebPage Capture
+		File srcFiile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		FileUtils.copyFile(srcFiile, new File("C:\\Users\\Diwakar.Kumar\\Downloads\\screen2.png"));
 		System.out.println("WebPage capture");
-		
-		Thread.sleep(2000);
-		//Click CNTRL+SHIFT+S
-		Actions action=new Actions(driver);
-		action.keyDown(Keys.CONTROL).sendKeys("T").build().perform();
-		
-		//opening a  new tab
-		driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL + "T");
-		Thread.sleep(2000);
-		
-		//WebPage Capture
-		File srcFiilee=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-		FileUtils.copyFile(srcFiilee, new File("C:\\Users\\Diwakar.Kumar\\Downloads\\allSelect.png"));
-		System.out.println("WepPage after action capture");
-		
 
+		Thread.sleep(2000);
+
+		// confirming order item is same in the checkout page
+		WebElement oderconf = driver.findElement(By.cssSelector("div td:nth-child(2)"));
+		String orderName = oderconf.findElement(By.xpath("//div[@class='title']")).getText();
+		Assert.assertEquals(orderName, productName);
+		System.out.println("Order item is same as the item selected : " + orderName + " Added product: " + productName);
+
+		
+		//opening a new tab using javascriptexecutor
+		// Open a new tab using JavaScript
+		((JavascriptExecutor) driver).executeScript("window.open('https://amazon.com', '_blank');");
+
+		// Switch to the new tab
+		ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
+		driver.switchTo().window(tabs.get(1));
+		
+		
+	//WebPage Capture
+		File srcFl=((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(srcFl, new File("C:\\Users\\Diwakar.Kumar\\Downloads\\screen56.png"));
+		System.out.println("New Tab Web Page Captured");
+		driver.quit();
 	}
 
 }
